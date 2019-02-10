@@ -1,0 +1,43 @@
+#parse thru CHNS INPUT and create adjacency list
+# coding: utf-8
+import plotly.plotly as py
+import plotly.graph_objs as go
+from collections import defaultdict
+import networkx as nx
+import json
+import time
+
+start_time = time.time()
+
+#setup adjacency list
+graph = defaultdict(list)
+G = nx.Graph()
+
+#file opening and reading
+filename = "small_input.txt"
+file = open(filename, "r", encoding="utf8")
+N = 0
+V = 0
+E = 0
+for line in file:
+    arr = line.split()
+    #split traditional into chars
+    c = list(arr[0])
+    if (len(c) == 1):
+        if c[0] != ', ':
+            graph[c[0]].append(None)
+            G.add_node(c[0])
+            N = N+1
+    else:
+        length = len(c)
+        #deals with chengyu, phrases
+        for i in range(0, length-1):
+            #append eliminate duplicates
+            if c[i+1] != ', ':
+                if c[i+1] not in graph:
+                    N=N+1
+                    G.add_edge(c[i], c[i+1])
+                    graph[c[i]].append(c[i+1])
+                E=E+1
+            if None in graph[c[i]]:
+                graph.pop(c[i], None)
